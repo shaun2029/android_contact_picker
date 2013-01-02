@@ -28,11 +28,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class ContactsPickerActivity extends FragmentActivity implements OnContactSelectedListener {
     public static final String SELECTED_CONTACT_ID 	= "contact_id";
 	public static final String KEY_PHONE_NUMBER 	= "phone_number";
 	public static final String KEY_CONTACT_NAME 	= "contact_name";
+	
+	private String contactNames = "", contactNumbers = "";
+
+	ContactsListFragment fragment;
+	Fragment detailsFragment;
+	
+	Button buttonDone;
 
 	/**
 	 * Starting point
@@ -42,13 +52,24 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
+
+		buttonDone = (Button) findViewById(R.id.buttonDone);
+		buttonDone.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+		        finish();			
+		    }
+		});
 		
 		FragmentManager 		fragmentManager 	= this.getSupportFragmentManager();
 		FragmentTransaction 	fragmentTransaction = fragmentManager.beginTransaction();
-		ContactsListFragment 	fragment 			= new ContactsListFragment();
+		fragment 			= new ContactsListFragment();
+		detailsFragment = new ContactDetailsFragment();
 		
 		fragmentTransaction.add(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
+		
 	}
 
 	/** 
@@ -59,20 +80,17 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	public void onContactNameSelected(long contactId) {
 		/* Now that we know which Contact was selected we can go to the details fragment */
 		
-		Fragment 	detailsFragment = new ContactDetailsFragment();
 		Bundle 		args 			= new Bundle();
 		args.putLong(ContactsPickerActivity.SELECTED_CONTACT_ID, contactId);
 		detailsFragment.setArguments(args);
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		// Replace whatever is in the fragment_container view with this fragment,
 		// and add the transaction to the back stack
-		transaction.replace(R.id.fragment_container, detailsFragment);
-		
-		transaction.addToBackStack(null);
+		fragmentTransaction.replace(R.id.fragment_container, detailsFragment);
 		// Commit the transaction
-		transaction.commit();
+		fragmentTransaction.commit();
 	}
 
 	/** 
@@ -81,12 +99,19 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	 */
 	@Override
 	public void onContactNumberSelected(String contactNumber, String contactName) {
+		contactNumbers += contactNumber + ";";
+		contactNames += contactName + ";";
+
 		Intent intent = new Intent();
-		intent.putExtra(KEY_PHONE_NUMBER, contactNumber);
-		intent.putExtra(KEY_CONTACT_NAME, contactName);
+		intent.putExtra(KEY_PHONE_NUMBER, contactNumbers);
+		intent.putExtra(KEY_CONTACT_NAME, contactNames);
 		
         setResult(RESULT_OK, intent);
-        finish();
-	}
-		
+
+        FragmentManager 		fragmentManager 	= this.getSupportFragmentManager();
+		FragmentTransaction 	fragmentTransaction = fragmentManager.beginTransaction();
+			
+		fragmentTransaction.replace(R.id.fragment_container, fragment);
+		fragmentTransaction.commit();
+	}	
 }
