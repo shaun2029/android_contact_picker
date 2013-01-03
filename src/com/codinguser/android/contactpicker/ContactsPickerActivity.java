@@ -37,11 +37,13 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	public static final String KEY_PHONE_NUMBER 	= "phone_number";
 	public static final String KEY_CONTACT_NAME 	= "contact_name";
 	public static final String KEY_CONTACT_LIST 	= "contact_list";
+	public static final String KEY_MULTI_SELECT 	= "multi_select";
 	
 	ContactsListFragment fragment;
 	Fragment detailsFragment;
 	
 	String contactList = "";
+	boolean multiSelect = false;
 
 	/**
 	 * Starting point
@@ -52,6 +54,8 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
 		
+		multiSelect = (boolean) getIntent().getExtras().getBoolean(KEY_MULTI_SELECT);
+		
 		FragmentManager 		fragmentManager 	= this.getSupportFragmentManager();
 		FragmentTransaction 	fragmentTransaction = fragmentManager.beginTransaction();
 		fragment 			= new ContactsListFragment();
@@ -60,12 +64,6 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		fragmentTransaction.add(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();	
 	}
-
-	@Override
-   	public boolean onTouchEvent(MotionEvent event) {
-	   // TODO Auto-generated method stub
-	   return gestureDetector.onTouchEvent(event);
-   	}
 
 	/** 
 	 * Callback when the contact is selected from the list of contacts.
@@ -109,29 +107,7 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 			
 		fragmentTransaction.replace(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
+		
+		if (!multiSelect) finish();
 	}	
-
-	SimpleOnGestureListener gesture = new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, 
-				float velocityX, float velocityY) {
-			
-			finish();
-			return true;
-		};
-		
-		@Override
-		public boolean onSingleTapConfirmed(MotionEvent e) {
-			finish();
-			return true;
-		}
-		
-		@Override
-		public void onLongPress(MotionEvent e) {
-			finish();			
-			super.onLongPress(e);
-		}
-	};
-	
-	GestureDetector gestureDetector	= new GestureDetector(gesture);
 }
