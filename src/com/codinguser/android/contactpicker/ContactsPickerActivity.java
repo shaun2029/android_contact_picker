@@ -28,6 +28,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
 
 public class ContactsPickerActivity extends FragmentActivity implements OnContactSelectedListener {
     public static final String SELECTED_CONTACT_ID 	= "contact_id";
@@ -48,16 +51,21 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
-
+		
 		FragmentManager 		fragmentManager 	= this.getSupportFragmentManager();
 		FragmentTransaction 	fragmentTransaction = fragmentManager.beginTransaction();
 		fragment 			= new ContactsListFragment();
 		detailsFragment = new ContactDetailsFragment();
 		
 		fragmentTransaction.add(R.id.fragment_container, fragment);
-		fragmentTransaction.commit();
-		
+		fragmentTransaction.commit();	
 	}
+
+	@Override
+   	public boolean onTouchEvent(MotionEvent event) {
+	   // TODO Auto-generated method stub
+	   return gestureDetector.onTouchEvent(event);
+   	}
 
 	/** 
 	 * Callback when the contact is selected from the list of contacts.
@@ -102,4 +110,28 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		fragmentTransaction.replace(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
 	}	
+
+	SimpleOnGestureListener gesture = new GestureDetector.SimpleOnGestureListener() {
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, 
+				float velocityX, float velocityY) {
+			
+			finish();
+			return true;
+		};
+		
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			finish();
+			return true;
+		}
+		
+		@Override
+		public void onLongPress(MotionEvent e) {
+			finish();			
+			super.onLongPress(e);
+		}
+	};
+	
+	GestureDetector gestureDetector	= new GestureDetector(gesture);
 }

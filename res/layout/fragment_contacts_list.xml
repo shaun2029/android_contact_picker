@@ -40,5 +40,5 @@
                android:layout_gravity="center"
                android:gravity="center"
                android:textAppearance="?android:attr/textAppearanceLarge"
-               android:text="Nothing to see here!"/>
+               android:text="Loading contacts ..."/>
 </LinearLayout>
