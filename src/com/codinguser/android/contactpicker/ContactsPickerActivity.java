@@ -22,15 +22,15 @@
 
 package com.codinguser.android.contactpicker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.MotionEvent;
+
 
 public class ContactsPickerActivity extends FragmentActivity implements OnContactSelectedListener {
     public static final String SELECTED_CONTACT_ID 	= "contact_id";
@@ -109,5 +109,10 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		fragmentTransaction.commit();
 		
 		if (!multiSelect) finish();
+		else
+		{
+	    	Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	    	v.vibrate(500);
+		}
 	}	
 }
