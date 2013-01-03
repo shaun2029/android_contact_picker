@@ -28,21 +28,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 public class ContactsPickerActivity extends FragmentActivity implements OnContactSelectedListener {
     public static final String SELECTED_CONTACT_ID 	= "contact_id";
 	public static final String KEY_PHONE_NUMBER 	= "phone_number";
 	public static final String KEY_CONTACT_NAME 	= "contact_name";
+	public static final String KEY_CONTACT_LIST 	= "contact_list";
 	
-	private String contactNames = "", contactNumbers = "";
-
 	ContactsListFragment fragment;
 	Fragment detailsFragment;
 	
-	Button buttonDone;
+	String contactList = "";
 
 	/**
 	 * Starting point
@@ -53,15 +49,6 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
 
-		buttonDone = (Button) findViewById(R.id.buttonDone);
-		buttonDone.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-		        finish();			
-		    }
-		});
-		
 		FragmentManager 		fragmentManager 	= this.getSupportFragmentManager();
 		FragmentTransaction 	fragmentTransaction = fragmentManager.beginTransaction();
 		fragment 			= new ContactsListFragment();
@@ -99,12 +86,13 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 	 */
 	@Override
 	public void onContactNumberSelected(String contactNumber, String contactName) {
-		contactNumbers += contactNumber + ";";
-		contactNames += contactName + ";";
-
+		contactList += "<" + contactName +"> " + contactNumber + ";";
+		
+		
 		Intent intent = new Intent();
-		intent.putExtra(KEY_PHONE_NUMBER, contactNumbers);
-		intent.putExtra(KEY_CONTACT_NAME, contactNames);
+		intent.putExtra(KEY_PHONE_NUMBER, contactNumber);
+		intent.putExtra(KEY_CONTACT_NAME, contactName);
+		intent.putExtra(KEY_CONTACT_LIST, contactList);
 		
         setResult(RESULT_OK, intent);
 
