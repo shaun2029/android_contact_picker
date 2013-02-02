@@ -112,7 +112,7 @@ public class ContactsPickerActivity extends FragmentActivity implements OnContac
 		else
 		{
 	    	Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-	    	v.vibrate(500);
+	    	v.vibrate(100);
 		}
 	}	
 }
