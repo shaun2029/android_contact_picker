@@ -91,7 +91,8 @@ public class ContactDetailsFragment extends ListFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		mCursor.close();
+		//mCursor.close(); // causes multi-select crash
+		mCursor.deactivate();
 	}
 	
 	@Override
